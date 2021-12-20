@@ -1,4 +1,4 @@
-iCC=gcc
+CC=gcc
 LD=ld
 
 CFLAGS=-mno-red-zone -fno-stack-protector -fpic -fshort-wchar -I /usr/include/efi/ -I /usr/include/efi/x86_64/ -DEPI_FUNCTION_WRAPPER
