@@ -8,7 +8,7 @@ VOID draw_menu(EFI_GRAPHICS_OUTPUT_MODE_INFORMATION *mode_info)
 {
   console_clear_screen();
   console_set_cursor_position(36, 5);
-  Print(L"CoffeBoot\n");
+  Print(L"CoffeeBoot\n");
   
   if(mode_info)
     Print(L"Resolution: (%dx%d)  \n", mode_info->HorizontalResolution, 
