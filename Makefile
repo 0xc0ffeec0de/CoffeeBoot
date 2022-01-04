@@ -7,7 +7,7 @@ LDFLAGS=-nostdlib -znocombreloc -T /usr/lib/elf_x86_64_efi.lds -shared -Bsymboli
 
 OBJS=efi_main.o loader.o gop.o console.o
 
-CoffeBoot.img: bootx64.efi
+CoffeeBoot.img: bootx64.efi
 	dd if=/dev/zero of=$@ bs=1k count=2880
 	mformat -i $@ -f 2880 ::
 	mmd -i $@ ::/efi
@@ -27,6 +27,6 @@ bootx64.so: $(OBJS)
 .PHONY: clean run
 
 run:
-	qemu-system-x86_64 -bios OVMF.fd -drive file=CoffeBoot.img,format=raw
+	qemu-system-x86_64 -bios OVMF.fd -drive file=CoffeeBoot.img,format=raw
 clean:
-	rm *.o bootx64.so bootx64.efi CoffeBoot.img
+	rm *.o bootx64.so bootx64.efi CoffeeBoot.img
