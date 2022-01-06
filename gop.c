@@ -9,7 +9,7 @@ EFI_STATUS gop_init(EFI_GRAPHICS_OUTPUT_PROTOCOL **gop)
   status = uefi_call_wrapper(BS->LocateProtocol, 3, &gop_guid, NULL, gop);
   if(EFI_ERROR(status))
   {
-    Print(L"Failed to locate protocol\n");
+    Print(L"LocateProtocol: Failed to locate protocol\n");
     return status;
   }
 
@@ -32,7 +32,7 @@ EFI_STATUS gop_get_mode_info(EFI_GRAPHICS_OUTPUT_PROTOCOL *gop, UINTN *mode, EFI
 
   if(EFI_ERROR(status))
   {
-    Print(L"Failed to query mode.\n");
+    Print(L"QueryMode: Failed to query mode.\n");
     *mode_info = NULL;
     return status;
   }
@@ -46,7 +46,9 @@ EFI_STATUS gop_set_video_mode(EFI_GRAPHICS_OUTPUT_PROTOCOL *gop, UINTN mode)
 
   status = uefi_call_wrapper(gop->SetMode, 2, gop, mode);
   if(EFI_ERROR(status))
+  {
+    Print(L"SetMode: Failed to set vide mode.\n");
     return status;
-
+  }
   return EFI_SUCCESS;
 }
