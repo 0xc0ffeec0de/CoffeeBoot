@@ -88,10 +88,11 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system_table)
 
   EFI_FILE_PROTOCOL *kernel_file;
   status = uefi_call_wrapper(root->Open, 5,
+                             root,
                              &kernel_file,
                              L"\\KERNEL\\KERNEL.ELF",
                              EFI_FILE_MODE_READ,
-                             EFI_FILE_READ_ONLY);
+                             NULL);
   if(EFI_ERROR(status))
   {
     Print(L"Open: Failed to open kernel file.\n");
@@ -114,7 +115,7 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system_table)
     Print(L"gop_set_video_mode: Failed to video mode.\n");
     return status;
   }
-
+  
   while(1);
   return EFI_SUCCESS;
 }
