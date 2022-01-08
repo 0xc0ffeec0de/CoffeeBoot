@@ -5,7 +5,7 @@ CFLAGS=-mno-red-zone -fno-stack-protector -fpic -fshort-wchar -I /usr/include/ef
 			 
 LDFLAGS=-nostdlib -znocombreloc -T /usr/lib/elf_x86_64_efi.lds -shared -Bsymbolic -L /usr/lib -l:libgnuefi.a -l:libefi.a
 
-OBJS=efi_main.o loader.o gop.o console.o
+OBJS=efi_main.o loader.o gop.o console.o elf.o
 
 CoffeeBoot.img: bootx64.efi
 	dd if=/dev/zero of=$@ bs=1k count=2880

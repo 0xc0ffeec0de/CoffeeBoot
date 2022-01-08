@@ -3,6 +3,7 @@
 #include "include/gop.h"
 #include "include/loader.h"
 #include "include/console.h"
+#include "include/elf.h"
 
 #define KERNEL_ADDR 0x100000
 
@@ -99,6 +100,25 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system_table)
     return status;
   }
 
+  elf_header_t elf_header;
+  UINTN elf_header_size = sizeof(elf_header_t);
+
+  status = uefi_call_wrapper(kernel_file->Read, 3,
+                             kernel_file,
+                             &elf_header_size,
+                             &elf_header);
+  if(EFI_ERROR(status))
+  {
+    Print(L"Read: Failed to read file.\n");
+    return status;
+  }
+  
+  if(!elf_is_elf(&elf_header))
+  {
+    Print(L"elf_is_elf: It's not an elf binary.\n");
+    return EFI_UNSUPPORTED;
+  }
+
   status = loader_load_kernel(kernel_file, (VOID *) KERNEL_ADDR);
   if(EFI_ERROR(status))
   {
@@ -115,7 +135,7 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system_table)
     Print(L"gop_set_video_mode: Failed to video mode.\n");
     return status;
   }
-  
+ 
   while(1);
   return EFI_SUCCESS;
 }
