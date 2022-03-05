@@ -1,8 +1,9 @@
 #include <efi.h>
 #include <efilib.h>
-#include "include/gop.h"
-#include "include/loader.h"
-#include "include/console.h"
+
+#include <coffee/gop.h>
+#include <coffee/loader.h>
+#include <coffee/console.h>
 
 VOID draw_menu(EFI_GRAPHICS_OUTPUT_MODE_INFORMATION *mode_info)
 {
