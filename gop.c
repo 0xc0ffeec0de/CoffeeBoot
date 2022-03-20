@@ -1,5 +1,5 @@
-#include "include/gop.h"
-#include "include/console.h"
+#include <coffee/gop.h>
+#include <coffee/console.h>
 
 EFI_STATUS gop_init(EFI_GRAPHICS_OUTPUT_PROTOCOL **gop)
 {

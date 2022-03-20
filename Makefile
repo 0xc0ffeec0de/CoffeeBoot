@@ -1,13 +1,15 @@
 CC=gcc
 LD=ld
 
-CFLAGS=-mno-red-zone -fno-stack-protector -fpic -fshort-wchar -I /usr/include/efi/ -I /usr/include/efi/x86_64/ -DEPI_FUNCTION_WRAPPER
-			 
+OVMF_DIR=/usr/share/edk2-ovmf/x64/
+
+CFLAGS=-mno-red-zone -fno-stack-protector -fpic -fshort-wchar -I include -I /usr/include/efi/ -I /usr/include/efi/x86_64/ -DEPI_FUNCTION_WRAPPER
 LDFLAGS=-nostdlib -znocombreloc -T /usr/lib/elf_x86_64_efi.lds -shared -Bsymbolic -L /usr/lib -l:libgnuefi.a -l:libefi.a
 
-OBJS=efi_main.o loader.o gop.o console.o
+COFFEE_OBJS=efi-main.o loader.o gop.o console.o
+COFFEE_IMG=CoffeeBoot.img
 
-CoffeeBoot.img: bootx64.efi
+$(COFFEE_IMG): bootx64.efi
 	dd if=/dev/zero of=$@ bs=1k count=2880
 	mformat -i $@ -f 2880 ::
 	mmd -i $@ ::/efi
@@ -18,15 +20,16 @@ CoffeeBoot.img: bootx64.efi
 bootx64.efi: bootx64.so
 	objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .rela -j .reloc --target=efi-app-x86_64 $< $@
 
-bootx64.so: $(OBJS)
+bootx64.so: $(COFFEE_OBJS)
 	$(LD) $^ /usr/lib/crt0-efi-x86_64.o $(LDFLAGS) -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-.PHONY: clean run
-
 run:
-	qemu-system-x86_64 -bios OVMF.fd -drive file=CoffeeBoot.img,format=raw
+	qemu-system-x86_64 -L $(OVMF_DIR) -bios OVMF.fd -drive file=$(COFFEE_IMG),format=raw
 clean:
-	rm *.o bootx64.so bootx64.efi CoffeeBoot.img
+	rm $(COFFEE_OBJS) bootx64.so bootx64.efi $(COFFEE_IMG)
+
+.PHONY: all clean run
+

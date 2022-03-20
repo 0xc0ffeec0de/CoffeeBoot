@@ -1,4 +1,4 @@
-#include "include/console.h"
+#include <coffee/console.h>
 
 VOID console_clear_screen(VOID)
 {
